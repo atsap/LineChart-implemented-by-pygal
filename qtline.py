@@ -28,7 +28,6 @@ except AttributeError:
 
 
 class Ui_Form(object):
-
     def setupUi(self, Form):
         Form.setObjectName(_fromUtf8("Form"))
         Form.resize(263, 87)
@@ -64,7 +63,6 @@ class Ui_Form(object):
         #self.horizontalLayout.addWidget(self.btn_specific)
         self.gridLayout.addWidget(self.splitter, 0, 0, 1, 1)
 
-
         self.retranslateUi(Form)
 
         def initpy():
@@ -79,7 +77,6 @@ class Ui_Form(object):
         QtCore.QMetaObject.connectSlotsByName(Form)
 
 
-
     def retranslateUi(self, Form):
         Form.setWindowTitle(_translate("Form", "Form", None))
         self.label.setText(_translate("Form", "Title:", None))
@@ -90,11 +87,8 @@ class Ui_Form(object):
 
     #start of main code block
 
-    def testbb(self,title):
-        print title
-        return
-
     def printdemo(self):  #Demo
+        my_path = os.path.dirname(os.path.abspath(__file__))
         line_chart = pygal.Line()
         line_chart.title = 'Demo'
         line_chart.x_labels = map(str, range(2002, 2013))
@@ -103,9 +97,9 @@ class Ui_Form(object):
         line_chart.add('IE', [85.8, 84.6, 84.7, 74.5, 66, 58.6, 54.7, 44.8, 36.2, 26.6, 20.1])
         line_chart.add('Others', [14.2, 15.4, 15.3, 8.9, 9, 10.4, 8.9, 5.8, 6.7, 6.8, 7.5])
         line_chart.render()
-        line_chart.render_to_file('Demo.svg')
-        line_chart.render_to_png("Demo.png")
-        f = open('Demo.html', 'w')
+        line_chart.render_to_file(my_path + '\Result\Demo.svg')
+        line_chart.render_to_png(my_path + "\Result\Demo.png")
+        f = open(my_path + '\Result\Demo.html', 'w')
         f.write(line_chart.render())
         f.close()
         return
@@ -120,7 +114,7 @@ class Ui_Form(object):
         return flist
 
 
-    def getValue_(self,fn): # Get Dataset
+    def getValue_(self, fn):  # Get Dataset
         vv = []
         f = open(str(fn), 'r')
         v_ = filter(None, f.readline().split(','))
@@ -134,25 +128,29 @@ class Ui_Form(object):
         xaxis = 0
 
         for file in flist:
-            f=open(my_path+"\\"+file,'r')
+            f = open(my_path + "\\" + file, 'r')
             v_ = filter(None, f.readline().split(','))
-            xaxis = max(xaxis,len(v_))
+            xaxis = max(xaxis, len(v_))
             print "xaxis=" + str(v_)
         return xaxis
 
 
-    def printpy(self,title):  #Print file name end with _py
+    def printpy(self, title):  #Print file name end with _py
+        my_path = os.path.dirname(os.path.abspath(__file__))
+        if not os.path.exists(my_path+'\Result'):
+            os.makedirs(my_path+'\Result')
         line_chart = pygal.Line()
-        line_chart.title = str(title) # this is fucking important...lineedit return QString!
+        line_chart.title = str(title)  # this is fucking important...lineedit return QString!
         flist = self.getpylist()
         line_chart.x_labels = map(str, range(1, self.xRange_(flist)))
         for file in flist:
-            line_chart.add(str(file).replace('_py.txt',''),   self.getValue_(str(file))) # set y-axis and value
+            line_chart.add(str(file).replace('_py.txt', ''), self.getValue_(str(file)))  # set y-axis and value
             print self.getValue_(str(file))
         line_chart.render()
-        line_chart.render_to_file('py.svg')
-        line_chart.render_to_png("py.png")
-        f=open('py.html','w')
+        print my_path + '\Result\py.svg'
+        line_chart.render_to_file(my_path + '\Result\py.svg')
+        line_chart.render_to_png(my_path + '\Result\py.png')
+        f = open(my_path + '\Result\py.html', 'w')
         f.write(line_chart.render())
         f.close()
         return
